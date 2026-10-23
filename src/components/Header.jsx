@@ -15,7 +15,7 @@ export default function Header() {
   return (
     <header className={`sticky top-0 z-50 bg-white/95 backdrop-blur transition-shadow ${solid ? 'shadow-md' : ''}`}>
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-5">
-        <Link to="/" className="font-display text-2xl font-extrabold">Kestrel<span className="text-brand">.</span></Link>
+        <Link to="/" className="font-display text-2xl font-bold lowercase tracking-tight">evoca</Link>
 
         <nav className="hidden h-full lg:flex">
           {sections.map((s, i) => (
