@@ -6,4 +6,4 @@ export default function About() {
     </div>
   )
 }
-// 68
+// 6
