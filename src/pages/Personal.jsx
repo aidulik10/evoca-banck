@@ -6,4 +6,4 @@ export default function About() {
     </div>
   )
 }
-// kyiuuhuuuguguiyty7utyuyiuyiuuy
+// kyiuuhuuuguguiyty7utyuyiuyiuu
