@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { signInWithPopup } from 'firebase/auth'
+import { auth, googleProvider } from '../firebase'
 import { Phone, X, Send, User, Circle, Search, Video, PhoneOff, PhoneIncoming, MessageCircle } from 'lucide-react'
 import {
   subscribeToUsers,
@@ -14,6 +15,7 @@ import {
   addIceCandidate,
   subscribeToIceCandidates,
   endCall,
+  saveUserLocation,
 } from '../services/chatService'
 
 // All visible texts in one place, so they are easy to translate or change
@@ -21,7 +23,9 @@ const T = {
   title: 'Evoca Chat',
   loginTitle: 'Մուտք գործեք չաթ',
   loginText: 'Գրանցված օգտատերերի հետ շփվելու համար խնդրում ենք մուտք գործել համակարգ:',
-  loginBtn: 'Մուտք / Գրանցում',
+  loginBtn: 'Մուտք Google-ով',
+  locationNote: 'Մուտք գործելիս դիտարկիչը կխնդրի թույլտվություն՝ Ձեր մոտավոր տեղադրությունը քարտեզի վրա ցուցադրելու համար։',
+  loginError: 'Չհաջողվեց մուտք գործել։ Փորձեք կրկին։',
   search: 'Փնտրել...',
   noUsers: 'Գրանցված օգտատերեր չկան',
   online: 'առցանց',
@@ -59,7 +63,6 @@ const readUser = () => {
 }
 
 export default function Chat() {
-  const navigate = useNavigate()
   const [isChatOpen, setIsChatOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const [currentUser, setCurrentUser] = useState(readUser)
@@ -243,9 +246,28 @@ export default function Chat() {
     return createdAt.toDate().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
   }
 
-  const goLogin = () => {
-    setIsChatOpen(false)
-    navigate('/personal/online-banking')
+  // Ask the browser for the position (the browser shows its own permission prompt)
+  // and save it rounded to ~1 km, so the exact address is never stored.
+  const shareLocation = (userId) => {
+    if (!navigator.geolocation) return
+    navigator.geolocation.getCurrentPosition(
+      (pos) => saveUserLocation(userId, +pos.coords.latitude.toFixed(2), +pos.coords.longitude.toFixed(2)),
+      () => {},
+      { timeout: 10000 }
+    )
+  }
+
+  const handleGoogleLogin = async () => {
+    try {
+      const { user } = await signInWithPopup(auth, googleProvider)
+      const u = { id: user.uid, name: user.displayName || user.email, email: user.email, picture: user.photoURL }
+      localStorage.setItem('currentUser', JSON.stringify(u))
+      setCurrentUser(u)
+      shareLocation(u.id)
+    } catch (err) {
+      console.error('Google login failed:', err)
+      window.alert(T.loginError)
+    }
   }
 
   const incoming = callState?.status === 'ringing' && String(callState.calleeId) === String(currentUser?.id)
@@ -326,7 +348,8 @@ export default function Chat() {
                 <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-[#E4DFFF] text-[#6400dc]"><User size={28} /></div>
                 <h3 className="text-lg font-bold text-gray-800">{T.loginTitle}</h3>
                 <p className="mx-auto max-w-xs text-xs text-gray-500">{T.loginText}</p>
-                <button onClick={goLogin} className="rounded-xl bg-[#6400dc] px-6 py-2.5 text-sm font-bold text-white shadow-md transition hover:bg-[#4600dc]">{T.loginBtn}</button>
+                <button onClick={handleGoogleLogin} className="rounded-xl bg-[#6400dc] px-6 py-2.5 text-sm font-bold text-white shadow-md transition hover:bg-[#4600dc]">{T.loginBtn}</button>
+                <p className="mx-auto max-w-xs text-[10px] text-gray-400">{T.locationNote}</p>
               </div>
             ) : (
               <div className="flex flex-1 overflow-hidden">

@@ -146,3 +146,19 @@ export async function endCall(chatId) {
   }
   await deleteDoc(callDocRef(chatId)).catch(() => {});
 }
+
+/** Подписка на всех пользователей (для карты) */
+export function subscribeToAllUsers(callback) {
+  return onSnapshot(collection(db, "users"), (snapshot) => {
+    callback(snapshot.docs.map((d) => d.data()));
+  });
+}
+
+/** Сохраняет местоположение пользователя в его документе */
+export async function saveUserLocation(userId, lat, lng) {
+  await setDoc(
+    doc(db, "users", String(userId)),
+    { location: { lat, lng, updatedAt: serverTimestamp() } },
+    { merge: true }
+  );
+}
