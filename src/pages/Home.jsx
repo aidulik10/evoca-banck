@@ -5,32 +5,149 @@ import Calc from '../components/Calc.jsx'
 import Reveal from '../components/Reveal.jsx'
 
 // Palette taken from evoca.am: purple #6400dc, banner backgrounds, lime accent #97FF00
+const i18n = {
+  en: {
+    learnMore: 'Learn more',
+    slideAria: (n) => `Slide ${n}`,
+    qrTitle: 'Scan QR code to sign in',
+    details: 'Details',
+    calculators: 'Calculators',
+    latestNews: 'Latest news',
+    allNews: 'All news',
+    lifestyle: 'Lifestyle',
+    exchangeRates: 'Exchange rates',
+    tabs: { Cash: 'Cash', 'Non-cash': 'Non-cash' },
+    buy: 'Buy',
+    sell: 'Sell',
+    sampleRates: 'Sample rates for the demo.',
+    iHave: 'I have',
+    iGet: 'I get',
+    whatCustomersSay: 'What customers say',
+    ratingAria: '5 out of 5',
+    customer: 'Customer',
+    reviewAria: (n) => `Review ${n}`,
+    slides: [
+      { t: 'Travel card with no foreign fees', d: 'Pay abroad, withdraw cash and track spending in one app.' },
+      { t: 'Bring your salary, get more back', d: 'Cashback, free transfers and a higher deposit rate.' },
+      { t: 'Home loans with clear payments', d: 'See the full cost of your mortgage before you apply.' },
+      { t: 'Open a deposit in the app', d: 'Pick the amount and term. Interest builds every day.' },
+      { t: 'Digital card in minutes', d: 'Order in the app and use it right away.' },
+    ],
+    cards: [
+      { n: 'Travel Card', d: 'No foreign fees, cashback abroad and cash withdrawals in one app.' },
+      { n: 'Visa Platinum', d: 'Everyday card with higher limits and travel insurance.' },
+      { n: 'Visa Infinite', d: 'The highest Visa class: VIP status, insured trips and safe purchases.' },
+      { n: 'Mastercard Gold', d: 'Book flights, hotels and cars in minutes.' },
+      { n: 'Digital Card', d: 'Order now and it appears in your app within minutes.' },
+    ],
+    reviews: [
+      ['Anna M.', 'The mortgage schedule was clear from day one. No surprises at the branch.'],
+      ['David K.', 'I opened my account from my phone in ten minutes.'],
+      ['Lilit S.', 'Support answered my card question in the chat within a minute.'],
+    ],
+  },
+  hy: {
+    learnMore: 'Իմանալ ավելին',
+    slideAria: (n) => `Սլայդ ${n}`,
+    qrTitle: 'Սկանավորեք QR կոդը մուտք գործելու համար',
+    details: 'Մանրամասներ',
+    calculators: 'Հաշվիչներ',
+    latestNews: 'Վերջին նորություններ',
+    allNews: 'Բոլոր նորությունները',
+    lifestyle: 'Ապրելակերպ',
+    exchangeRates: 'Փոխարժեքներ',
+    tabs: { Cash: 'Կանխիկ', 'Non-cash': 'Անկանխիկ' },
+    buy: 'Առք',
+    sell: 'Վաճառք',
+    sampleRates: 'Նմուշային փոխարժեքներ ցուցադրական տարբերակի համար։',
+    iHave: 'Ունեմ',
+    iGet: 'Կստանամ',
+    whatCustomersSay: 'Ինչ են ասում հաճախորդները',
+    ratingAria: '5-ից 5',
+    customer: 'Հաճախորդ',
+    reviewAria: (n) => `Կարծիք ${n}`,
+    slides: [
+      { t: 'Ճամփորդական քարտ՝ առանց արտարժութային միջնորդավճարների', d: 'Վճարեք արտերկրում, կանխիկացրեք և հետևեք ծախսերին մեկ հավելվածում։' },
+      { t: 'Ստացեք աշխատավարձը մեզ մոտ և ստացեք ավելին', d: 'Քեշբեք, անվճար փոխանցումներ և ավելի բարձր ավանդային տոկոսադրույք։' },
+      { t: 'Հիփոթեքային վարկեր՝ հստակ վճարումներով', d: 'Տեսեք վարկի ամբողջական արժեքը դիմելուց առաջ։' },
+      { t: 'Բացեք ավանդ հավելվածում', d: 'Ընտրեք գումարը և ժամկետը։ Տոկոսները կուտակվեն ամեն օր։' },
+      { t: 'Թվային քարտ՝ րոպեների ընթացքում', d: 'Պատվիրեք հավելվածում և օգտագործեք անմիջապես։' },
+    ],
+    cards: [
+      { n: 'Travel Card', d: 'Առանց արտարժութային միջնորդավճարների, քեշբեք արտերկրում և կանխիկացում մեկ հավելվածում։' },
+      { n: 'Visa Platinum', d: 'Ամենօրյա քարտ՝ ավելի բարձր սահմանաչափերով և ճամփորդական ապահովագրությամբ։' },
+      { n: 'Visa Infinite', d: 'Visa-ի բարձրագույն դաս՝ VIP կարգավիճակ, ապահովագրված ուղևորություններ և գնումների պաշտպանություն։' },
+      { n: 'Mastercard Gold', d: 'Ամրագրեք չվերթներ, հյուրանոցներ և մեքենաներ րոպեների ընթացքում։' },
+      { n: 'Digital Card', d: 'Պատվիրեք հիմա և այն կհայտնվի հավելվածում րոպեների ընթացքում։' },
+    ],
+    reviews: [
+      ['Աննա Մ․', 'Հիփոթեքի գրաֆիկը հստակ էր առաջին իսկ օրվանից։ Մասնաճյուղում անակնկալներ չեղան։'],
+      ['Դավիթ Կ․', 'Հաշիվս բացեցի հեռախոսով տասը րոպեում։'],
+      ['Լիլիթ Ս․', 'Աջակցության թիմը քարտիս հարցին չաթում պատասխանեց մեկ րոպեում։'],
+    ],
+  },
+  ru: {
+    learnMore: 'Подробнее',
+    slideAria: (n) => `Слайд ${n}`,
+    qrTitle: 'Сканируйте QR-код для входа',
+    details: 'Подробнее',
+    calculators: 'Калькуляторы',
+    latestNews: 'Последние новости',
+    allNews: 'Все новости',
+    lifestyle: 'Лайфстайл',
+    exchangeRates: 'Курсы валют',
+    tabs: { Cash: 'Наличные', 'Non-cash': 'Безналичные' },
+    buy: 'Покупка',
+    sell: 'Продажа',
+    sampleRates: 'Примерные курсы для демо-версии.',
+    iHave: 'У меня есть',
+    iGet: 'Я получу',
+    whatCustomersSay: 'Отзывы клиентов',
+    ratingAria: '5 из 5',
+    customer: 'Клиент',
+    reviewAria: (n) => `Отзыв ${n}`,
+    slides: [
+      { t: 'Карта для путешествий без комиссий за валюту', d: 'Платите за границей, снимайте наличные и следите за тратами в одном приложении.' },
+      { t: 'Переводите зарплату и получайте больше', d: 'Кэшбэк, бесплатные переводы и повышенная ставка по вкладу.' },
+      { t: 'Ипотека с понятными платежами', d: 'Узнайте полную стоимость кредита ещё до подачи заявки.' },
+      { t: 'Откройте вклад в приложении', d: 'Выберите сумму и срок. Проценты начисляются каждый день.' },
+      { t: 'Цифровая карта за пару минут', d: 'Оформите в приложении и пользуйтесь сразу.' },
+    ],
+    cards: [
+      { n: 'Travel Card', d: 'Без комиссий за иностранную валюту, кэшбэк за рубежом и снятие наличных в одном приложении.' },
+      { n: 'Visa Platinum', d: 'Карта на каждый день с повышенными лимитами и страховкой в поездках.' },
+      { n: 'Visa Infinite', d: 'Высший класс Visa: VIP-статус, застрахованные поездки и защита покупок.' },
+      { n: 'Mastercard Gold', d: 'Бронируйте авиабилеты, отели и авто за считанные минуты.' },
+      { n: 'Digital Card', d: 'Оформите сейчас — карта появится в приложении через несколько минут.' },
+    ],
+    reviews: [
+      ['Анна М.', 'График по ипотеке был понятен с самого начала. Никаких сюрпризов в отделении.'],
+      ['Давид К.', 'Открыл счёт с телефона за десять минут.'],
+      ['Лилит С.', 'Поддержка ответила на вопрос по карте в чате меньше чем за минуту.'],
+    ],
+  },
+}
+
 const slides = [
-  { t: 'Travel card with no foreign fees', d: 'Pay abroad, withdraw cash and track spending in one app.', to: '/personal/travel-card', bg: '#000000', img: 'https://www.evoca.am/images-cache/sliders/1/17737433784078/126c54e244e880fd563d8af43979486c-577x485.png' },
-  { t: 'Bring your salary, get more back', d: 'Cashback, free transfers and a higher deposit rate.', to: '/personal/salary-project', bg: '#6539aa', img: 'https://www.evoca.am/images-cache/sliders/1/17740137222872/7152cafab4609e8483a365f79ecf04cb-577x486.png' },
-  { t: 'Home loans with clear payments', d: 'See the full cost of your mortgage before you apply.', to: '/personal/mortgage-loans', bg: '#b28d48', img: 'https://www.evoca.am/images-cache/sliders/1/17262130779724/2fee1054871280f57daf5204f901c563-577x486.png' },
-  { t: 'Open a deposit in the app', d: 'Pick the amount and term. Interest builds every day.', to: '/personal/online-deposit', bg: '#000000', img: 'https://www.evoca.am/images-cache/sliders/1/17612202124044/b74e87ec0e83aa10cb128d41f0ada026-577x486.png' },
-  { t: 'Digital card in minutes', d: 'Order in the app and use it right away.', to: '/personal/premium-cards', bg: '#FFDCFB', light: true, img: 'https://www.evoca.am/images-cache/sliders/1/16178037539626/79381d3e68fdf7ec25c5837a19ce5821-577x486.jpg' },
+  { to: '/personal/travel-card', bg: '#000000', img: 'https://www.evoca.am/images-cache/sliders/1/17737433784078/126c54e244e880fd563d8af43979486c-577x485.png' },
+  { to: '/personal/salary-project', bg: '#6539aa', img: 'https://www.evoca.am/images-cache/sliders/1/17740137222872/7152cafab4609e8483a365f79ecf04cb-577x486.png' },
+  { to: '/personal/mortgage-loans', bg: '#b28d48', img: 'https://www.evoca.am/images-cache/sliders/1/17262130779724/2fee1054871280f57daf5204f901c563-577x486.png' },
+  { to: '/personal/online-deposit', bg: '#000000', img: 'https://www.evoca.am/images-cache/sliders/1/17612202124044/b74e87ec0e83aa10cb128d41f0ada026-577x486.png' },
+  { to: '/personal/premium-cards', bg: '#FFDCFB', light: true, img: 'https://www.evoca.am/images-cache/sliders/1/16178037539626/79381d3e68fdf7ec25c5837a19ce5821-577x486.jpg' },
 ]
 
-const cards = [
-  { n: 'Travel Card', g: 'linear-gradient(135deg,#6539aa,#6400dc)', d: 'No foreign fees, cashback abroad and cash withdrawals in one app.' },
-  { n: 'Visa Platinum', g: 'linear-gradient(135deg,#c9ccd1,#f1f2f4)', dark: true, d: 'Everyday card with higher limits and travel insurance.' },
-  { n: 'Visa Infinite', g: 'linear-gradient(135deg,#000,#3a3d41)', d: 'The highest Visa class: VIP status, insured trips and safe purchases.' },
-  { n: 'Mastercard Gold', g: 'linear-gradient(135deg,#b6a44f,#ead98c)', dark: true, d: 'Book flights, hotels and cars in minutes.' },
-  { n: 'Digital Card', g: 'linear-gradient(135deg,#FFDCFB,#E4DFFF)', dark: true, d: 'Order now and it appears in your app within minutes.' },
+const cardStyles = [
+  { g: 'linear-gradient(135deg,#6539aa,#6400dc)' },
+  { g: 'linear-gradient(135deg,#c9ccd1,#f1f2f4)', dark: true },
+  { g: 'linear-gradient(135deg,#000,#3a3d41)' },
+  { g: 'linear-gradient(135deg,#b6a44f,#ead98c)', dark: true },
+  { g: 'linear-gradient(135deg,#FFDCFB,#E4DFFF)', dark: true },
 ]
 
 const rates = {
   Cash: [['USD', 361, 365], ['EUR', 412, 423], ['GBP', 477, 496], ['CHF', 430, 455]],
   'Non-cash': [['USD', 361, 365.5], ['EUR', 412, 423], ['GBP', 477, 496], ['CNY', 53, 56]],
 }
-
-const reviews = [
-  ['Anna M.', 'The mortgage schedule was clear from day one. No surprises at the branch.'],
-  ['David K.', 'I opened my account from my phone in ten minutes.'],
-  ['Lilit S.', 'Support answered my card question in the chat within a minute.'],
-]
 
 const faces = [
   'https://www.evoca.am/img/temp/biometric/face3.png',
@@ -154,6 +271,7 @@ function CardArt({ c, className = '' }) {
 }
 
 export default function Home() {
+  const [lang, setLang] = useState('en')
   const [i, setI] = useState(0)
   const [pause, setPause] = useState(false)
   const [tab, setTab] = useState('Cash')
@@ -164,6 +282,14 @@ export default function Home() {
   const [to, setTo] = useState('USD')
   const [faceIdx, setFaceIdx] = useState(0)
 
+  const t = i18n[lang]
+  const cards = cardStyles.map((st, idx) => ({ ...st, ...t.cards[idx] }))
+  const reviews = t.reviews
+
+  useEffect(() => {
+    document.documentElement.lang = lang
+  }, [lang])
+
   useEffect(() => {
     if (pause) return
     const id = setInterval(() => setI((x) => (x + 1) % slides.length), 5000)
@@ -172,22 +298,22 @@ export default function Home() {
   useEffect(() => {
     const id = setInterval(() => setRev((x) => (x + 1) % reviews.length), 6000)
     return () => clearInterval(id)
-  }, [])
+  }, [reviews.length])
   useEffect(() => {
     const id = setInterval(() => setFaceIdx((x) => (x + 1) % faces.length), 3000)
     return () => clearInterval(id)
   }, [])
   useEffect(() => { setFrom('AMD'); setTo('USD') }, [tab])
 
-  const s = slides[i]
+  const s = { ...slides[i], ...t.slides[i] }
   const c = cards[card]
   const list = rates[tab]
   const ccy = ['AMD', ...list.map((r) => r[0])]
   const rate = (code, k) => (code === 'AMD' ? 1 : list.find((r) => r[0] === code)?.[k])
   const result = (() => {
     const a = parseFloat(amt)
-    const f = rate(from, 1), t = rate(to, 2)
-    return a && f && t ? ((a * f) / t).toLocaleString(undefined, { maximumFractionDigits: 2 }) : ''
+    const f = rate(from, 1), rateTo = rate(to, 2)
+    return a && f && rateTo ? ((a * f) / rateTo).toLocaleString(undefined, { maximumFractionDigits: 2 }) : ''
   })()
   const news = sections.find((x) => x.key === 'news').groups[0].items
   const sel = 'rounded-lg border border-ink/15 bg-white px-3 py-2 text-sm font-semibold'
@@ -197,15 +323,36 @@ export default function Home() {
       {/* Banner slider: flat colour per slide, text colour follows the background */}
       <section onMouseEnter={() => setPause(true)} onMouseLeave={() => setPause(false)}
         style={{ background: s.bg, borderBottomLeftRadius: '200px' }} className={`overflow-hidden transition-colors duration-700 ${s.light ? 'text-ink' : 'text-white'}`}>
-        <div className="mx-auto max-w-6xl px-5 pt-12 pb-24">
+        <div className="mx-auto max-w-6xl px-5 pt-6 pb-24">
+          <div className="mb-6 flex justify-end">
+            <div className="inline-flex rounded-lg bg-black/20 p-1 text-xs font-semibold backdrop-blur-sm" role="group" aria-label="Language">
+              {['en', 'hy', 'ru'].map((code) => (
+                <button
+                  key={code}
+                  type="button"
+                  onClick={() => setLang(code)}
+                  className={`rounded-md px-2.5 py-1 uppercase transition ${
+                    lang === code
+                      ? s.light
+                        ? 'bg-[#6400dc] text-white'
+                        : 'bg-white text-ink'
+                      : 'opacity-75 hover:opacity-100'
+                  }`}
+                >
+                  {code}
+                </button>
+              ))}
+            </div>
+          </div>
+
           <div className="grid min-h-[22rem] items-center gap-8 md:grid-cols-2">
-            <div key={i} className="slide-in">
+            <div key={`${lang}-${i}`} className="slide-in">
               <h1 className="text-3xl font-medium leading-tight md:text-4xl">{s.t}</h1>
               <p className="mt-4 max-w-md text-lg opacity-80">{s.d}</p>
-              <Link to={s.to} className={`mt-8 inline-block rounded-lg px-7 py-3 font-medium transition ${s.light ? 'bg-[#6400dc] text-white hover:bg-[#4600dc]' : 'bg-white text-ink hover:bg-[#E4DFFF]'}`}>Learn more</Link>
+              <Link to={s.to} className={`mt-8 inline-block rounded-lg px-7 py-3 font-medium transition ${s.light ? 'bg-[#6400dc] text-white hover:bg-[#4600dc]' : 'bg-white text-ink hover:bg-[#E4DFFF]'}`}>{t.learnMore}</Link>
               <div className="mt-8 flex gap-2">
                 {slides.map((_, n) => (
-                  <button key={n} aria-label={`Slide ${n + 1}`} onClick={() => setI(n)}
+                  <button key={n} aria-label={t.slideAria(n + 1)} onClick={() => setI(n)}
                     className={`h-2 rounded-full transition-all ${n === i ? 'w-8 bg-current' : 'w-2 bg-current opacity-30'}`} />
                 ))}
               </div>
@@ -246,7 +393,7 @@ export default function Home() {
             <FaceScan />
           </div>
           <div className="flex flex-col items-center text-center md:items-start md:text-left">
-            <h3 className="mb-6 text-2xl font-bold md:text-3xl">Сканируйте QR-код для входа</h3>
+            <h3 className="mb-6 text-2xl font-bold md:text-3xl">{t.qrTitle}</h3>
             <img src="https://www.evoca.am/img/biometric-section-QR-Code.png" alt="QR Code" className="h-44 w-44 rounded-xl bg-white object-contain p-2 shadow-md" />
           </div>
         </div>
@@ -269,7 +416,7 @@ export default function Home() {
             <div>
               <h2 className="text-3xl font-medium">{c.n}</h2>
               <p className="mt-3 text-ink/70">{c.d}</p>
-              <Link to={`/personal/${slug(c.n)}`} className="mt-6 inline-block rounded-lg bg-[#6400dc] px-7 py-3 font-medium text-white transition hover:bg-[#4600dc]">Details</Link>
+              <Link to={`/personal/${slug(c.n)}`} className="mt-6 inline-block rounded-lg bg-[#6400dc] px-7 py-3 font-medium text-white transition hover:bg-[#4600dc]">{t.details}</Link>
             </div>
           </div>
         </div>
@@ -277,8 +424,8 @@ export default function Home() {
 
       <section className="py-14">
         <div className="mx-auto max-w-5xl px-5">
-          <Title>Calculators</Title>
-          <Reveal><Calc /></Reveal>
+          <Title>{t.calculators}</Title>
+          <Reveal><Calc lang={lang} /></Reveal>
         </div>
       </section>
 
@@ -286,16 +433,16 @@ export default function Home() {
       <section className="bg-paper py-14">
         <div className="mx-auto max-w-6xl px-5">
           <div className="mb-8 flex items-end justify-between">
-            <h2 className="text-3xl font-bold md:text-4xl">Latest news</h2>
-            <Link to="/news" className="rounded-lg border border-[#6400dc] px-4 py-2 text-sm font-medium text-[#6400dc] transition hover:bg-[#6400dc] hover:text-white">All news</Link>
+            <h2 className="text-3xl font-bold md:text-4xl">{t.latestNews}</h2>
+            <Link to="/news" className="rounded-lg border border-[#6400dc] px-4 py-2 text-sm font-medium text-[#6400dc] transition hover:bg-[#6400dc] hover:text-white">{t.allNews}</Link>
           </div>
           <div className="grid gap-6 md:grid-cols-3">
-            {news.map((t, n) => (
-              <Reveal key={t} delay={n * 80}>
-                <Link to={`/news/${slug(t)}`} className="group block">
+            {news.map((item, n) => (
+              <Reveal key={item} delay={n * 80}>
+                <Link to={`/news/${slug(item)}`} className="group block">
                   <div className="h-44 overflow-hidden rounded-xl" style={{ background: ['#6539aa', '#E4DFFF', '#FFDCFB'][n] }} />
-                  <span className="mt-4 inline-block border-b-2 border-[#97FF00] text-sm font-medium">Lifestyle</span>
-                  <p className="mt-2 text-lg font-medium transition group-hover:text-[#6400dc]">{t}</p>
+                  <span className="mt-4 inline-block border-b-2 border-[#97FF00] text-sm font-medium">{t.lifestyle}</span>
+                  <p className="mt-2 text-lg font-medium transition group-hover:text-[#6400dc]">{item}</p>
                 </Link>
               </Reveal>
             ))}
@@ -306,25 +453,25 @@ export default function Home() {
       {/* Exchange rates + converter */}
       <section className="mx-auto max-w-6xl px-5 py-14">
         <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
-          <h2 className="text-3xl font-bold md:text-4xl">Exchange rates</h2>
+          <h2 className="text-3xl font-bold md:text-4xl">{t.exchangeRates}</h2>
           <div className="flex gap-6 border-b border-ink/10 text-sm font-medium">
             {Object.keys(rates).map((k) => (
-              <button key={k} onClick={() => setTab(k)} className={`-mb-px border-b-2 pb-2 transition ${tab === k ? 'border-[#6400dc] text-[#6400dc]' : 'border-transparent text-ink/50'}`}>{k}</button>
+              <button key={k} onClick={() => setTab(k)} className={`-mb-px border-b-2 pb-2 transition ${tab === k ? 'border-[#6400dc] text-[#6400dc]' : 'border-transparent text-ink/50'}`}>{t.tabs[k]}</button>
             ))}
           </div>
         </div>
         <div className="grid gap-10 md:grid-cols-2">
           <div>
             <table className="w-full text-left tabular-nums">
-              <thead className="text-sm text-ink/50"><tr><th className="py-2" /><th>Buy</th><th>Sell</th></tr></thead>
+              <thead className="text-sm text-ink/50"><tr><th className="py-2" /><th>{t.buy}</th><th>{t.sell}</th></tr></thead>
               <tbody>{list.map(([k, b, s2]) => (
                 <tr key={k} className="border-t border-ink/10 text-xl font-medium"><td className="py-3 text-base font-semibold">{k}</td><td>{b}</td><td>{s2}</td></tr>
               ))}</tbody>
             </table>
-            <p className="mt-3 text-xs text-ink/40">Sample rates for the demo.</p>
+            <p className="mt-3 text-xs text-ink/40">{t.sampleRates}</p>
           </div>
           <div className="rounded-2xl bg-[#E4DFFF]/60 p-6">
-            {[['I have', from, setFrom, amt, (e) => setAmt(e.target.value)], ['I get', to, setTo, result, null]].map(([label, val, set, v, on]) => (
+            {[[t.iHave, from, setFrom, amt, (e) => setAmt(e.target.value)], [t.iGet, to, setTo, result, null]].map(([label, val, set, v, on]) => (
               <label key={label} className="mb-4 block last:mb-0">
                 <span className="text-sm text-ink/60">{label}</span>
                 <div className="mt-1 flex gap-2">
@@ -340,16 +487,16 @@ export default function Home() {
       {/* Reviews: one centred quote at a time */}
       <section className="bg-[#6539aa] py-16 text-center text-white">
         <div className="mx-auto max-w-3xl px-5">
-          <h2 className="mb-8 text-3xl font-bold md:text-4xl">What customers say</h2>
-          <p className="text-2xl tracking-widest text-[#97FF00]" aria-label="5 out of 5">★★★★★</p>
-          <div key={rev} className="slide-in">
+          <h2 className="mb-8 text-3xl font-bold md:text-4xl">{t.whatCustomersSay}</h2>
+          <p className="text-2xl tracking-widest text-[#97FF00]" aria-label={t.ratingAria}>★★★★★</p>
+          <div key={`${lang}-${rev}`} className="slide-in">
             <p className="mt-5 min-h-[5rem] text-xl leading-relaxed">{reviews[rev][1]}</p>
             <p className="mt-4 font-medium">{reviews[rev][0]}</p>
-            <p className="text-sm text-white/60">Customer</p>
+            <p className="text-sm text-white/60">{t.customer}</p>
           </div>
           <div className="mt-8 flex justify-center gap-2">
             {reviews.map((_, n) => (
-              <button key={n} aria-label={`Review ${n + 1}`} onClick={() => setRev(n)}
+              <button key={n} aria-label={t.reviewAria(n + 1)} onClick={() => setRev(n)}
                 className={`h-2 rounded-full transition-all ${n === rev ? 'w-8 bg-white' : 'w-2 bg-white/40'}`} />
             ))}
           </div>
